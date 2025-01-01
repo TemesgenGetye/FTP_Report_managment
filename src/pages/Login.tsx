@@ -16,6 +16,8 @@ export default function Login() {
     if (responce.user.status === 200) {
       navigator("/");
       localStorage.setItem("token", responce.user.access_token);
+      localStorage.setItem("role", responce.user.user_data.role);
+      localStorage.setItem("id", responce.user.user_data.id);
       window.location.reload();
     } else {
       alert("Invalid email or password");

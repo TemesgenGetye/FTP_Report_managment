@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Bell, LogOut, Search, User } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FaBell, FaUserCircle, FaSignOutAlt, FaSearch } from "react-icons/fa";
 import { getCurrentUser } from "../api/user";
+import { Link } from "react-router-dom";
 
 interface User {
   name: string;
@@ -8,6 +9,7 @@ interface User {
 
 export default function Header() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const role = localStorage.getItem("role");
 
   useEffect(() => {
     async function fetchUser() {
@@ -20,41 +22,41 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm">
       <div className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search reports..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-            />
-          </div>
-        </div>
+        <div className="text-2xl font-bold">{role}</div>
 
+        {/* Notification and User Info */}
         <div className="flex items-center space-x-4">
-          <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
-            <Bell className="w-6 h-6" />
+          {/* Notification Bell */}
+          <Link
+            to={"/notifications"}
+            className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full"
+          >
+            <FaBell className="w-6 h-6" />
             <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </button>
+          </Link>
 
+          {/* User Info */}
           <div className="flex items-center space-x-3">
-            <span className="text-sm font-medium">
+            <Link
+              to={"/profile"}
+              className=" flex items-center gap-2 text-sm font-medium"
+            >
               {currentUser?.user?.name}
-            </span>
-            <div className="flex item-center gap-2">
-              <User className="w-8 h-8 p-1 bg-gray-200 rounded-full" />
-              <button
+              <FaUserCircle className="w-8 h-8 text-gray-400" />
+            </Link>
+
+            <div className="flex items-center gap-2">
+              <Link
+                to={"/"}
                 onClick={() => {
                   localStorage.clear();
                   window.location.reload();
                 }}
-                className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full"
+                className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full flex items-center gap-2"
               >
-                <span className="flex item-center gap-2">
-                  <LogOut />
-                  Logout
-                </span>
-              </button>
+                <FaSignOutAlt />
+                <span>Logout</span>
+              </Link>
             </div>
           </div>
         </div>

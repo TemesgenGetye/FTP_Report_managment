@@ -22,10 +22,11 @@ export default function Sidebar() {
     { icon: User, label: "Profile", path: "/profile" },
   ];
 
+
   return (
     <div className="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white">
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold">DIN Reports</h1>
+        <h1 className="text-xl font-bold w-10/12">Menu</h1>
         <Menu className="w-6 h-6" />
       </div>
       <nav className="mt-6">

@@ -1,6 +1,13 @@
-import React from 'react';
-import { FileText, Clock, CheckSquare, AlertTriangle } from 'lucide-react';
-import type { Report } from '../types';
+import { useEffect, useState } from "react";
+import { FaFileAlt, FaClock, FaCheckSquare, FaExclamationTriangle } from "react-icons/fa";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import {
+  deleteReport,
+  getAllReports,
+  getDraftReports,
+  getSubmittedReports,
+} from "../api/reports";
+import ReportList from "../components/reports/ReportList";
 
 const StatCard = ({ icon: Icon, label, value, color }: any) => (
   <div className="bg-white rounded-lg shadow p-6">
@@ -16,54 +23,95 @@ const StatCard = ({ icon: Icon, label, value, color }: any) => (
   </div>
 );
 
-const RecentReports = ({ reports }: { reports: Report[] }) => (
-  <div className="bg-white rounded-lg shadow">
-    <div className="p-6">
-      <h2 className="text-lg font-semibold mb-4">Recent Reports</h2>
-      <div className="space-y-4">
-        {reports.map((report) => (
-          <div key={report.id} className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
-              <h3 className="font-medium">{report.rub_amet.title}</h3>
-              <p className="text-sm text-gray-600">{report.creator}</p>
-            </div>
-            <span className={`px-3 py-1 rounded-full text-sm ${
-              report.draft ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-            }`}>
-              {report.draft ? 'Draft' : 'Submitted'}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
 export default function Dashboard() {
-  const [reports, setReports] = React.useState<Report[]>([]);
-  const [stats, setStats] = React.useState({
-    total: 0,
-    drafts: 0,
-    submitted: 0,
-    pending: 0
-  });
+  const [allReports, setAllReports] = useState([]);
+  const [draftReportsCount, setDraftReportsCount] = useState(0);
+  const [submittedReportsCount, setSubmittedReportsCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const statCards = [
-    { icon: FileText, label: 'Total Reports', value: stats.total, color: 'bg-blue-500' },
-    { icon: Clock, label: 'Draft Reports', value: stats.drafts, color: 'bg-yellow-500' },
-    { icon: CheckSquare, label: 'Submitted', value: stats.submitted, color: 'bg-green-500' },
-    { icon: AlertTriangle, label: 'Pending Review', value: stats.pending, color: 'bg-red-500' },
+  async function fetchReports() {
+    setIsLoading(true);
+    try {
+      const allReportsResponse = (await getAllReports());
+      const draftReportsResponse = await getDraftReports();
+      const submittedReportsResponse = await getSubmittedReports();
+
+      
+      if (allReportsResponse.success) {
+        setAllReports(allReportsResponse.data?.report || []);
+      }
+      
+      if (draftReportsResponse.success) {
+        setDraftReportsCount(draftReportsResponse.data?.report?.length || 0);
+      }
+      
+      if (submittedReportsResponse.success) {
+        setSubmittedReportsCount(submittedReportsResponse.data?.report?.length || 0);
+      }
+      console.log("All Reports Response:", allReportsResponse);
+      console.log("Draft Reports Response:", draftReportsResponse,draftReportsCount);
+      console.log("Submitted Reports Response:", submittedReportsResponse, submittedReportsCount);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  if (isLoading) return <LoadingSpinner />;
+
+  const stats = [
+    {
+      icon: FaFileAlt,
+      label: "Total Reports",
+      value: allReports.length,
+      color: "bg-blue-500",
+    },
+    {
+      icon: FaClock,
+      label: "Draft Reports",
+      value: draftReportsCount,
+      color: "bg-yellow-500",
+    },
+    {
+      icon: FaCheckSquare,
+      label: "Submitted",
+      value: submittedReportsCount,
+      color: "bg-green-500",
+    },
+    {
+      icon: FaExclamationTriangle,
+      label: "Pending Review",
+      value: 0, // Placeholder, update with real data if needed
+      color: "bg-red-500",
+    },
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <div className="p-6 space-y-6">
+      {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat) => (
+        {stats.map((stat) => (
           <StatCard key={stat.label} {...stat} />
         ))}
       </div>
-      <RecentReports reports={reports} />
+
+      {/* Reports List */}
+      <ReportList
+        reports={allReports.slice(0, 5)}
+        onDelete={async (id: string) => {
+          try {
+            await deleteReport(id);
+            fetchReports(); // Refresh after deletion
+          } catch (error) {
+            console.error("Error deleting report:", error);
+          }
+        }}
+      />
     </div>
   );
 }
