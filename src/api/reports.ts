@@ -2,12 +2,7 @@ import type { Report } from "../types";
 
 const API_URL = "https://report-managment-latest.onrender.com/api";
 const token = localStorage.getItem("token");
-const role =
-  localStorage.getItem("role") === "strategic_planner"
-    ? "strategicplaningoffice"
-    : localStorage.getItem("role") === "vice_president"
-    ? "vicepresedant"
-    : "din";
+const role =   localStorage.getItem("role") === "strategic_planner"? "strategicplaningoffice" : localStorage.getItem("role") === "vice_president" ? "vicepresedant" : "din" ;
 
 interface ApiResponse<T> {
   success: boolean;
@@ -100,8 +95,7 @@ export async function getDraftReports(): Promise<ApiResponse<Report[]>> {
 
 export async function getSubmittedReports(): Promise<ApiResponse<Report[]>> {
   try {
-    // I have to change this to draft because the api is not working
-    const response = await fetch(`${API_URL}/report/${role}/draft`, {
+    const response = await fetch(`${API_URL}/report/${role}/submitted`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -6,7 +6,6 @@ import LoadingSpinner from "../components/common/LoadingSpinner";
 export default function SubmittedReports() {
   const [submitedReports, setSubmitedReports] = React.useState(null);
   const [isloading, setIsLoading] = React.useState(false);
-  console.log(submitedReports);
 
   async function fetchReports() {
     setIsLoading(true);

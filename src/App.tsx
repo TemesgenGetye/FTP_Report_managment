@@ -10,6 +10,8 @@ import DraftReports from "./pages/DraftReports";
 import SubmittedReports from "./pages/SubmittedReports";
 import { Signup } from "./pages/Signup";
 import Login from "./pages/Login";
+import FAQ from "./pages/helpandSupport";
+import Plans from "./pages/allplans";
 import { getCurrentUser } from "./api/user";
 
 function App() {
@@ -54,6 +56,8 @@ function App() {
               <Route path="/reports/submitted" element={<SubmittedReports />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/plans" element={<Plans />} />
             </Routes>
           </main>
         </div>

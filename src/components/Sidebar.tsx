@@ -4,6 +4,7 @@ import {
   Menu,
   Home,
   FileText,
+  List,
   Clock,
   CheckSquare,
   User,
@@ -16,6 +17,7 @@ export default function Sidebar() {
   const menuItems = [
     { icon: Home, label: "Dashboard", path: "/" },
     { icon: FileText, label: "All Reports", path: "/reports" },
+    { icon: List, label: "All plans", path: "/plans" },
     { icon: Clock, label: "Drafts", path: "/reports/drafts" },
     { icon: CheckSquare, label: "Submitted", path: "/reports/submitted" },
     { icon: Bell, label: "Notifications", path: "/notifications" },
@@ -43,6 +45,8 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
+
+      <Link to={"/faq"} className="fixed flex items-center px-6 py-3 bottom-4 left-0 text-center text-blue-400 underline">Help and Suport</Link>
     </div>
   );
 }

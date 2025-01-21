@@ -17,3 +17,22 @@ export interface FormData {
     last_year: string;
   };
 }
+
+export interface Plan {
+  id: string;
+  creator: string;
+  fetsami: string;
+  gib: string;
+  kibdet: string;
+  melekia: string;
+  receiver: string;
+  rub_amet: {
+    ekid: string;
+    title: string;
+  };
+  tera_kutr: string;
+  yearly_status: {
+    last_year: string;
+    current_year: string;
+  };
+}
