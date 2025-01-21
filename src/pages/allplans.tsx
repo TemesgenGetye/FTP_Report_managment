@@ -43,27 +43,27 @@ const Plans: React.FC = () => {
     }
   }
 
-  // Function to delete a plan from the API
-  const handleDelete = async (id: string) => {
-    const confirmation = window.confirm("Are you sure you want to delete this plan?");
-    if (!confirmation) return;
+  // // Function to delete a plan from the API
+  // const handleDelete = async (id: string) => {
+  //   const confirmation = window.confirm("Are you sure you want to delete this plan?");
+  //   if (!confirmation) return;
 
-    try {
-      const response = await fetch(`https://strategic-plan-dun.vercel.app/plans/${id}`, {
-        method: "DELETE",
-      });
+  //   try {
+  //     const response = await fetch(`https://strategic-plan-dun.vercel.app/plans/${id}`, {
+  //       method: "DELETE",
+  //     });
 
-      if (!response.ok) {
-        throw new Error("Failed to delete the plan");
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete the plan");
+  //     }
 
-      // Update the UI by removing the deleted plan
-      setAllPlans((prevPlans) => prevPlans?.filter((plan) => plan.id !== id) || []);
-    } catch (error) {
-      console.error("Error deleting plan:", error);
-      setError("An error occurred while deleting the plan. Please try again later.");
-    }
-  };
+  //     // Update the UI by removing the deleted plan
+  //     setAllPlans((prevPlans) => prevPlans?.filter((plan) => plan.id !== id) || []);
+  //   } catch (error) {
+  //     console.error("Error deleting plan:", error);
+  //     setError("An error occurred while deleting the plan. Please try again later.");
+  //   }
+  // };
 
   // Fetch plans when the component is mounted
   useEffect(() => {
@@ -104,7 +104,7 @@ const Plans: React.FC = () => {
       ) : (
         <>
           {allPlans && allPlans.length > 0 ? (
-            <PlanList plans={allPlans} onDelete={handleDelete} />
+            <PlanList plans={allPlans}/>
           ) : (
             <div className="text-center text-gray-500">No plans available</div>
           )}
