@@ -6,6 +6,11 @@ import { HEAD_OFFICE_OPTIONS } from "../types/user";
 import { getUserByRole, signUp } from "../api/user";
 import { useNavigate } from "react-router-dom";
 
+interface optionsType{
+  name:string;
+  id:string;
+}
+
 export function Signup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,7 +22,7 @@ export function Signup() {
     confirmPassword: "",
     role: "",
   });
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<optionsType[] | []>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [toFetch, setToFetch] = useState("strategic_planner");
 

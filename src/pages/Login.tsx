@@ -11,6 +11,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // if (email === "natnael.necho@aastustudent.edu.et") {
+    //   localStorage.setItem("role", "admin");
+    //   navigator("/admin");
+    // }
+
     const responce = await signIn({ email, password });
     console.log(responce.user);
     if (responce.user.status === 200) {
@@ -18,6 +24,8 @@ export default function Login() {
       localStorage.setItem("token", responce.user.access_token);
       localStorage.setItem("role", responce.user.user_data.role);
       localStorage.setItem("id", responce.user.user_data.id);
+      localStorage.setItem("name", responce.user.user_data.name);
+
       window.location.reload();
     } else {
       alert("Invalid email or password");
