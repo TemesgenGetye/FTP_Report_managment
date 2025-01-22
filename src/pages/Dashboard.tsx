@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
-import { FaFileAlt, FaClock, FaCheckSquare, FaExclamationTriangle } from "react-icons/fa";
+import {
+  FaFileAlt,
+  FaClock,
+  FaCheckSquare,
+  FaExclamationTriangle,
+} from "react-icons/fa";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import {
-  deleteReport,
   getAllReports,
   getDraftReports,
   getSubmittedReports,
 } from "../api/reports";
 import ReportList from "../components/reports/ReportList";
+import BarChartGraph from "../components/ui/BarChart";
+import AreaChartGraph from "@/components/ui/AreaChart";
+import RadicalChartGraph from "@/components/ui/RadicalChart";
+import RadarChartGraph from "@/components/ui/RadarChart";
 
 const StatCard = ({ icon: Icon, label, value, color }: any) => (
   <div className="bg-white rounded-lg shadow p-6">
@@ -32,32 +40,41 @@ export default function Dashboard() {
   async function fetchReports() {
     setIsLoading(true);
     try {
-      const allReportsResponse = (await getAllReports());
+      const allReportsResponse = await getAllReports();
       const draftReportsResponse = await getDraftReports();
       const submittedReportsResponse = await getSubmittedReports();
 
-      
       if (allReportsResponse.success) {
         setAllReports(allReportsResponse.data?.report || []);
       }
-      
+
       if (draftReportsResponse.success) {
         setDraftReportsCount(draftReportsResponse.data?.report?.length || 0);
       }
-      
+
       if (submittedReportsResponse.success) {
-        setSubmittedReportsCount(submittedReportsResponse.data?.report?.length || 0);
+        setSubmittedReportsCount(
+          submittedReportsResponse.data?.report?.length || 0
+        );
       }
       console.log("All Reports Response:", allReportsResponse);
-      console.log("Draft Reports Response:", draftReportsResponse,draftReportsCount);
-      console.log("Submitted Reports Response:", submittedReportsResponse, submittedReportsCount);
+      console.log(
+        "Draft Reports Response:",
+        draftReportsResponse,
+        draftReportsCount
+      );
+      console.log(
+        "Submitted Reports Response:",
+        submittedReportsResponse,
+        submittedReportsCount
+      );
     } catch (error) {
       console.error("Error fetching reports:", error);
     } finally {
       setIsLoading(false);
     }
   }
-  
+
   useEffect(() => {
     fetchReports();
   }, []);
@@ -100,18 +117,12 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Reports List */}
-      <ReportList
-        reports={allReports.slice(0, 5)}
-        onDelete={async (id: string) => {
-          try {
-            await deleteReport(id);
-            fetchReports(); // Refresh after deletion
-          } catch (error) {
-            console.error("Error deleting report:", error);
-          }
-        }}
-      />
+      <div className="grid grid-cols-2 gap-4">
+        <BarChartGraph />
+        <AreaChartGraph />
+        <RadicalChartGraph />
+        <RadarChartGraph />
+      </div>
     </div>
   );
 }
